@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#090d1b" />
+  <meta name="description" content="Browse submitted teams and open their presentation or project video." />
+  <title>Team Submissions | Project Showcase</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #090d1b;
+      --surface: rgba(20, 28, 49, .78);
+      --surface-strong: #151d33;
+      --line: rgba(177, 194, 230, .14);
+      --text: #f3f6ff;
+      --muted: #a6b1c9;
+      --accent: #91a7ff;
+      --accent-2: #67e4d0;
+      --warning: #ffcc86;
+      --shadow: 0 22px 70px rgba(0, 0, 0, .28);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(ellipse at 8% 0%, rgba(89, 112, 220, .22), transparent 35rem),
+        radial-gradient(ellipse at 95% 18%, rgba(36, 184, 167, .13), transparent 31rem),
+        var(--bg);
+    }
+    a { color: inherit; }
+    .shell { width: min(1120px, calc(100% - 40px)); margin: 0 auto; padding: 44px 0 60px; }
+    .topline { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 54px; }
+    .brand { display: flex; align-items: center; gap: 11px; font-size: 13px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: #dce4ff; }
+    .brand-mark { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 11px; color: #0b1324; background: linear-gradient(135deg, var(--accent), var(--accent-2)); font-size: 17px; }
+    .live-pill { display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); background: rgba(255,255,255,.035); font-size: 12px; }
+    .live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent-2); box-shadow: 0 0 12px rgba(103,228,208,.75); }
+    .hero { max-width: 760px; margin-bottom: 35px; }
+    .eyebrow { margin: 0 0 14px; color: var(--accent-2); font-size: 12px; font-weight: 800; letter-spacing: .19em; text-transform: uppercase; }
+    h1 { margin: 0; font-size: clamp(42px, 7vw, 76px); line-height: .99; letter-spacing: -.065em; font-weight: 850; }
+    h1 span { color: transparent; background: linear-gradient(100deg, #aebcff 12%, #72e5d2 92%); background-clip: text; -webkit-background-clip: text; }
+    .intro { max-width: 620px; margin: 20px 0 0; color: var(--muted); font-size: 16px; line-height: 1.75; }
+    .toolbar { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin: 28px 0 18px; }
+    .search-wrap { position: relative; width: min(420px, 100%); }
+    .search-icon { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #8593b3; font-size: 17px; pointer-events: none; }
+    #search { width: 100%; padding: 14px 16px 14px 43px; border: 1px solid var(--line); border-radius: 14px; outline: none; color: var(--text); background: rgba(18, 25, 45, .78); font: inherit; }
+    #search:focus { border-color: rgba(145,167,255,.7); box-shadow: 0 0 0 3px rgba(145,167,255,.12); }
+    .refresh-button { border: 1px solid var(--line); border-radius: 13px; padding: 13px 16px; color: #e8edff; background: rgba(255,255,255,.055); font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; transition: .2s ease; }
+    .refresh-button:hover { border-color: rgba(145,167,255,.55); background: rgba(145,167,255,.1); }
+    .stats { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 18px 0 19px; color: var(--muted); font-size: 13px; }
+    #teamCount { color: var(--text); font-weight: 800; }
+    #updatedAt { text-align: right; }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+    .team-card { min-width: 0; padding: 0; border: 1px solid var(--line); border-radius: 18px; background: linear-gradient(145deg, rgba(24,34,59,.9), rgba(16,23,41,.84)); box-shadow: 0 8px 30px rgba(0,0,0,.12); overflow: hidden; transition: transform .2s ease, border-color .2s ease, background .2s ease; }
+    .team-card:hover { transform: translateY(-2px); border-color: rgba(145,167,255,.35); }
+    .team-card[open] { border-color: rgba(145,167,255,.48); background: linear-gradient(145deg, rgba(29,42,72,.96), rgba(16,23,41,.94)); }
+    .team-card summary { display: flex; align-items: center; gap: 15px; padding: 21px; cursor: pointer; list-style: none; }
+    .team-card summary::-webkit-details-marker { display: none; }
+    .team-number { display: grid; flex: 0 0 43px; place-items: center; width: 43px; height: 43px; border: 1px solid rgba(145,167,255,.2); border-radius: 13px; color: #c8d2ff; background: rgba(145,167,255,.1); font-size: 13px; font-weight: 800; }
+    .team-info { min-width: 0; flex: 1; }
+    .team-name { display: block; overflow-wrap: anywhere; color: var(--text); font-size: 17px; font-weight: 750; letter-spacing: -.02em; }
+    .team-hint { display: block; margin-top: 5px; color: var(--muted); font-size: 12px; }
+    .chevron { color: #9eafd6; font-size: 19px; transition: transform .2s ease; }
+    .team-card[open] .chevron { transform: rotate(180deg); }
+    .actions { display: flex; flex-wrap: wrap; gap: 10px; padding: 0 21px 20px 79px; }
+    .action-link, .action-disabled { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 40px; padding: 10px 14px; border-radius: 11px; font-size: 12px; font-weight: 800; text-decoration: none; }
+    .action-link { color: #0a1425; background: linear-gradient(105deg, #b3c0ff, #8be6d7); transition: filter .2s ease, transform .2s ease; }
+    .action-link:hover { filter: brightness(1.08); transform: translateY(-1px); }
+    .action-disabled { color: #8491aa; background: rgba(255,255,255,.055); }
+    .state-panel { padding: 45px 20px; border: 1px dashed var(--line); border-radius: 18px; color: var(--muted); background: rgba(255,255,255,.025); text-align: center; line-height: 1.7; }
+    .state-panel strong { display: block; margin-bottom: 6px; color: var(--text); font-size: 16px; }
+    .footer { display: flex; justify-content: space-between; gap: 20px; margin-top: 55px; padding-top: 19px; border-top: 1px solid var(--line); color: #7886a4; font-size: 11px; line-height: 1.6; }
+    .footer span:last-child { text-align: right; }
+    @media (max-width: 700px) {
+      .shell { width: min(100% - 28px, 560px); padding-top: 25px; }
+      .topline { margin-bottom: 42px; }
+      .grid { grid-template-columns: 1fr; }
+      .toolbar { align-items: stretch; }
+      .refresh-button { white-space: nowrap; }
+      .actions { padding-left: 21px; }
+    }
+    @media (max-width: 430px) {
+      .live-pill { font-size: 0; gap: 0; padding: 10px; }
+      .live-dot { width: 8px; height: 8px; }
+      .toolbar { flex-direction: column; }
+      .search-wrap { width: 100%; }
+      .refresh-button { width: 100%; }
+      .stats { align-items: flex-start; flex-direction: column; }
+      #updatedAt { text-align: left; }
+      .footer { flex-direction: column; }
+      .footer span:last-child { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="topline">
+      <div class="brand"><span class="brand-mark">✦</span><span>Project Showcase</span></div>
+      <div class="live-pill"><span class="live-dot"></span> Live submissions</div>
+    </header>
+
+    <section class="hero">
+      <p class="eyebrow">Ideas made visible</p>
+      <h1>Meet the <span>teams.</span></h1>
+      <p class="intro">Explore the teams that have submitted their work. Open a team to view its presentation or watch its project video.</p>
+    </section>
+
+    <section aria-label="Team submissions">
+      <div class="toolbar">
+        <label class="search-wrap">
+          <span class="search-icon" aria-hidden="true">⌕</span>
+          <input id="search" type="search" placeholder="Search team name..." autocomplete="off" />
+        </label>
+        <button class="refresh-button" id="refreshButton" type="button">↻ &nbsp; Refresh submissions</button>
+      </div>
+      <div class="stats">
+        <span><span id="teamCount">0</span> teams submitted</span>
+        <span id="updatedAt">Connecting to submissions…</span>
+      </div>
+      <div id="teamGrid" class="grid" aria-live="polite">
+        <div class="state-panel" style="grid-column:1/-1"><strong>Loading submissions</strong>Connecting to the live team list…</div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <span>Team submissions portal</span>
+      <span>New entries are checked automatically every 30 seconds.</span>
+    </footer>
+  </main>
+
+  <script>
+    // STEP 1: Replace this placeholder with the CSV link from Google Sheets > File > Share > Publish to web.
+    const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRpV1lTjxxg_WVpjZsJpnCPaP0b66Y3OBexrmDlzNpI5T0vdWOBy-phoH_4pHeGvYsIUjisG0YLSw0s/pub?gid=778663479&single=true&output=csv";
+    const REFRESH_EVERY_MS = 30_000;
+
+    const grid = document.getElementById("teamGrid");
+    const countLabel = document.getElementById("teamCount");
+    const updatedLabel = document.getElementById("updatedAt");
+    const searchInput = document.getElementById("search");
+    const refreshButton = document.getElementById("refreshButton");
+
+    let allTeams = [];
+    let isLoading = false;
+
+    function parseCSV(text) {
+      const rows = [];
+      let row = [];
+      let cell = "";
+      let quoted = false;
+
+      for (let i = 0; i < text.length; i++) {
+        const char = text[i];
+        if (char === '"') {
+          if (quoted && text[i + 1] === '"') {
+            cell += '"';
+            i++;
+          } else {
+            quoted = !quoted;
+          }
+        } else if (char === "," && !quoted) {
+          row.push(cell);
+          cell = "";
+        } else if ((char === "\n" || char === "\r") && !quoted) {
+          if (char === "\r" && text[i + 1] === "\n") i++;
+          row.push(cell);
+          if (row.some(value => value.trim() !== "")) rows.push(row);
+          row = [];
+          cell = "";
+        } else {
+          cell += char;
+        }
+      }
+      row.push(cell);
+      if (row.some(value => value.trim() !== "")) rows.push(row);
+      return rows;
+    }
+
+    function normaliseHeader(value) {
+      return String(value || "").trim().toLowerCase().replace(/\s+/g, " ");
+    }
+
+    function safeLink(value) {
+      const raw = String(value || "").trim();
+      if (!raw) return "";
+      try {
+        const parsed = new URL(raw);
+        return parsed.protocol === "https:" || parsed.protocol === "http:" ? parsed.href : "";
+      } catch {
+        return "";
+      }
+    }
+
+    function escapeHTML(value) {
+      return String(value ?? "").replace(/[&<>"']/g, char => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+      })[char]);
+    }
+
+    function makeAction(label, url, symbol) {
+      if (!url) return `<span class="action-disabled">${symbol} ${label} not provided</span>`;
+      return `<a class="action-link" href="${escapeHTML(url)}" target="_blank" rel="noopener noreferrer">${symbol} ${label}</a>`;
+    }
+
+    function renderTeams() {
+      const query = searchInput.value.trim().toLowerCase();
+      const filtered = allTeams.filter(team => team.name.toLowerCase().includes(query));
+      countLabel.textContent = String(allTeams.length);
+
+      if (allTeams.length === 0) {
+        grid.innerHTML = `<div class="state-panel" style="grid-column:1/-1"><strong>No teams submitted yet</strong>When a team submits the form, its name and links will appear here.</div>`;
+        return;
+      }
+      if (filtered.length === 0) {
+        grid.innerHTML = `<div class="state-panel" style="grid-column:1/-1"><strong>No matching teams</strong>Try another team name.</div>`;
+        return;
+      }
+
+      grid.innerHTML = filtered.map((team, index) => `
+        <details class="team-card">
+          <summary>
+            <span class="team-number">${String(index + 1).padStart(2, "0")}</span>
+            <span class="team-info">
+              <span class="team-name">${escapeHTML(team.name)}</span>
+              <span class="team-hint">Click to view submitted work</span>
+            </span>
+            <span class="chevron" aria-hidden="true">⌄</span>
+          </summary>
+          <div class="actions">
+            ${makeAction("View PPT", team.ppt, "↗")}
+            ${makeAction("Watch Video", team.video, "▶")}
+          </div>
+        </details>
+      `).join("");
+    }
+
+    async function loadTeams() {
+      if (isLoading) return;
+      if (!SHEET_CSV_URL || SHEET_CSV_URL.includes("PASTE_YOUR_PUBLISHED_CSV_URL_HERE")) {
+        updatedLabel.textContent = "Add your published CSV URL in index.html";
+        grid.innerHTML = `<div class="state-panel" style="grid-column:1/-1"><strong>One setup step remaining</strong>Paste your Google Sheets published CSV link into the SHEET_CSV_URL setting in this file.</div>`;
+        return;
+      }
+
+      isLoading = true;
+      refreshButton.disabled = true;
+      refreshButton.textContent = "↻  Refreshing…";
+      try {
+        const separator = SHEET_CSV_URL.includes("?") ? "&" : "?";
+        const response = await fetch(`${SHEET_CSV_URL}${separator}_=${Date.now()}`, { cache: "no-store" });
+        if (!response.ok) throw new Error(`Google Sheets returned ${response.status}`);
+        const csvText = await response.text();
+        const rows = parseCSV(csvText);
+        if (rows.length < 1) throw new Error("The published CSV is empty.");
+
+        const headers = rows[0].map(normaliseHeader);
+        const teamIndex = headers.findIndex(header => header.includes("team") && header.includes("name"));
+        const pptIndex = headers.findIndex(header => header.includes("ppt"));
+        const videoIndex = headers.findIndex(header => header.includes("video"));
+        if (teamIndex === -1 || pptIndex === -1 || videoIndex === -1) {
+          throw new Error("Could not find the Team Name, PPT and Video columns. Check the Public Data tab headers.");
+        }
+
+        allTeams = rows.slice(1)
+          .map(row => ({
+            name: String(row[teamIndex] || "").trim(),
+            ppt: safeLink(row[pptIndex]),
+            video: safeLink(row[videoIndex])
+          }))
+          .filter(team => team.name)
+          .reverse();
+
+        renderTeams();
+        updatedLabel.textContent = `Last checked ${new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`;
+      } catch (error) {
+        console.error(error);
+        updatedLabel.textContent = "Could not update the team list";
+        grid.innerHTML = `<div class="state-panel" style="grid-column:1/-1"><strong>Unable to load submissions</strong>${escapeHTML(error.message)}<br />Check that the CSV is published and the link in index.html is correct.</div>`;
+      } finally {
+        isLoading = false;
+        refreshButton.disabled = false;
+        refreshButton.textContent = "↻  Refresh submissions";
+      }
+    }
+
+    searchInput.addEventListener("input", renderTeams);
+    refreshButton.addEventListener("click", loadTeams);
+    loadTeams();
+    setInterval(() => {
+      if (document.visibilityState === "visible") loadTeams();
+    }, REFRESH_EVERY_MS);
+  </script>
+</body>
+</html>
