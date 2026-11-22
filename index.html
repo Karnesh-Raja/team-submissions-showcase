@@ -3,21 +3,21 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#090d1b" />
+  <meta name="theme-color" content="#080808" />
   <meta name="description" content="Browse submitted teams and open their presentation or project video." />
-  <title>Team Submissions | Project Showcase</title>
+  <title>Mystic Summit Hackathon | Team Submissions</title>
   <style>
     :root {
       color-scheme: dark;
-      --bg: #090d1b;
-      --surface: rgba(20, 28, 49, .78);
-      --surface-strong: #151d33;
-      --line: rgba(177, 194, 230, .14);
-      --text: #f3f6ff;
-      --muted: #a6b1c9;
-      --accent: #91a7ff;
-      --accent-2: #67e4d0;
-      --warning: #ffcc86;
+      --bg: #080808;
+      --surface: rgba(28, 24, 15, .82);
+      --surface-strong: #17130b;
+      --line: rgba(212, 175, 55, .22);
+      --text: #f8f1dc;
+      --muted: #c4b995;
+      --accent: #d4af37;
+      --accent-2: #f2d675;
+      --warning: #ffdf91;
       --shadow: 0 22px 70px rgba(0, 0, 0, .28);
     }
     * { box-sizing: border-box; }
@@ -27,52 +27,54 @@
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       color: var(--text);
       background:
-        radial-gradient(ellipse at 8% 0%, rgba(89, 112, 220, .22), transparent 35rem),
-        radial-gradient(ellipse at 95% 18%, rgba(36, 184, 167, .13), transparent 31rem),
+        radial-gradient(ellipse at 8% 0%, rgba(212, 175, 55, .16), transparent 35rem),
+        radial-gradient(ellipse at 95% 18%, rgba(166, 124, 32, .10), transparent 31rem),
         var(--bg);
     }
     a { color: inherit; }
     .shell { width: min(1120px, calc(100% - 40px)); margin: 0 auto; padding: 44px 0 60px; }
     .topline { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 54px; }
-    .brand { display: flex; align-items: center; gap: 11px; font-size: 13px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; color: #dce4ff; }
-    .brand-mark { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 11px; color: #0b1324; background: linear-gradient(135deg, var(--accent), var(--accent-2)); font-size: 17px; }
+    .brand { display: flex; align-items: center; gap: 11px; font-size: 11px; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; color: #f2df9b; }
+    .brand-copy { display: flex; flex-direction: column; gap: 3px; line-height: 1.35; }
+    .brand-copy span:last-child { color: #d4af37; font-size: 10px; letter-spacing: .07em; }
+    .brand-mark { display: grid; flex: 0 0 34px; place-items: center; width: 34px; height: 34px; border-radius: 11px; color: #100d05; background: linear-gradient(135deg, var(--accent), var(--accent-2)); font-size: 17px; }
     .live-pill { display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); background: rgba(255,255,255,.035); font-size: 12px; }
-    .live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent-2); box-shadow: 0 0 12px rgba(103,228,208,.75); }
+    .live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent-2); box-shadow: 0 0 12px rgba(242,214,117,.75); }
     .hero { max-width: 760px; margin-bottom: 35px; }
     .eyebrow { margin: 0 0 14px; color: var(--accent-2); font-size: 12px; font-weight: 800; letter-spacing: .19em; text-transform: uppercase; }
     h1 { margin: 0; font-size: clamp(42px, 7vw, 76px); line-height: .99; letter-spacing: -.065em; font-weight: 850; }
-    h1 span { color: transparent; background: linear-gradient(100deg, #aebcff 12%, #72e5d2 92%); background-clip: text; -webkit-background-clip: text; }
+    h1 span { color: transparent; background: linear-gradient(100deg, #d4af37 12%, #f5df91 92%); background-clip: text; -webkit-background-clip: text; }
     .intro { max-width: 620px; margin: 20px 0 0; color: var(--muted); font-size: 16px; line-height: 1.75; }
     .toolbar { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin: 28px 0 18px; }
     .search-wrap { position: relative; width: min(420px, 100%); }
-    .search-icon { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #8593b3; font-size: 17px; pointer-events: none; }
+    .search-icon { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #b39b55; font-size: 17px; pointer-events: none; }
     #search { width: 100%; padding: 14px 16px 14px 43px; border: 1px solid var(--line); border-radius: 14px; outline: none; color: var(--text); background: rgba(18, 25, 45, .78); font: inherit; }
-    #search:focus { border-color: rgba(145,167,255,.7); box-shadow: 0 0 0 3px rgba(145,167,255,.12); }
+    #search:focus { border-color: rgba(212,175,55,.7); box-shadow: 0 0 0 3px rgba(212,175,55,.12); }
     .refresh-button { border: 1px solid var(--line); border-radius: 13px; padding: 13px 16px; color: #e8edff; background: rgba(255,255,255,.055); font: inherit; font-size: 13px; font-weight: 700; cursor: pointer; transition: .2s ease; }
-    .refresh-button:hover { border-color: rgba(145,167,255,.55); background: rgba(145,167,255,.1); }
+    .refresh-button:hover { border-color: rgba(212,175,55,.55); background: rgba(212,175,55,.1); }
     .stats { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 18px 0 19px; color: var(--muted); font-size: 13px; }
     #teamCount { color: var(--text); font-weight: 800; }
     #updatedAt { text-align: right; }
     .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
     .team-card { min-width: 0; padding: 0; border: 1px solid var(--line); border-radius: 18px; background: linear-gradient(145deg, rgba(24,34,59,.9), rgba(16,23,41,.84)); box-shadow: 0 8px 30px rgba(0,0,0,.12); overflow: hidden; transition: transform .2s ease, border-color .2s ease, background .2s ease; }
-    .team-card:hover { transform: translateY(-2px); border-color: rgba(145,167,255,.35); }
-    .team-card[open] { border-color: rgba(145,167,255,.48); background: linear-gradient(145deg, rgba(29,42,72,.96), rgba(16,23,41,.94)); }
+    .team-card:hover { transform: translateY(-2px); border-color: rgba(212,175,55,.35); }
+    .team-card[open] { border-color: rgba(212,175,55,.48); background: linear-gradient(145deg, rgba(29,42,72,.96), rgba(16,23,41,.94)); }
     .team-card summary { display: flex; align-items: center; gap: 15px; padding: 21px; cursor: pointer; list-style: none; }
     .team-card summary::-webkit-details-marker { display: none; }
-    .team-number { display: grid; flex: 0 0 43px; place-items: center; width: 43px; height: 43px; border: 1px solid rgba(145,167,255,.2); border-radius: 13px; color: #c8d2ff; background: rgba(145,167,255,.1); font-size: 13px; font-weight: 800; }
+    .team-number { display: grid; flex: 0 0 43px; place-items: center; width: 43px; height: 43px; border: 1px solid rgba(212,175,55,.2); border-radius: 13px; color: #f0d982; background: rgba(212,175,55,.1); font-size: 13px; font-weight: 800; }
     .team-info { min-width: 0; flex: 1; }
     .team-name { display: block; overflow-wrap: anywhere; color: var(--text); font-size: 17px; font-weight: 750; letter-spacing: -.02em; }
     .team-hint { display: block; margin-top: 5px; color: var(--muted); font-size: 12px; }
-    .chevron { color: #9eafd6; font-size: 19px; transition: transform .2s ease; }
+    .chevron { color: #d9c47e; font-size: 19px; transition: transform .2s ease; }
     .team-card[open] .chevron { transform: rotate(180deg); }
     .actions { display: flex; flex-wrap: wrap; gap: 10px; padding: 0 21px 20px 79px; }
     .action-link, .action-disabled { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 40px; padding: 10px 14px; border-radius: 11px; font-size: 12px; font-weight: 800; text-decoration: none; }
-    .action-link { color: #0a1425; background: linear-gradient(105deg, #b3c0ff, #8be6d7); transition: filter .2s ease, transform .2s ease; }
+    .action-link { color: #171105; background: linear-gradient(105deg, #e4c45e, #f6e6a8); transition: filter .2s ease, transform .2s ease; }
     .action-link:hover { filter: brightness(1.08); transform: translateY(-1px); }
     .action-disabled { color: #8491aa; background: rgba(255,255,255,.055); }
     .state-panel { white-space: pre-line; padding: 45px 20px; border: 1px dashed var(--line); border-radius: 18px; color: var(--muted); background: rgba(255,255,255,.025); text-align: center; line-height: 1.7; }
     .state-panel strong { display: block; margin-bottom: 6px; color: var(--text); font-size: 16px; }
-    .footer { display: flex; justify-content: space-between; gap: 20px; margin-top: 55px; padding-top: 19px; border-top: 1px solid var(--line); color: #7886a4; font-size: 11px; line-height: 1.6; }
+    .footer { display: flex; justify-content: space-between; gap: 20px; margin-top: 55px; padding-top: 19px; border-top: 1px solid var(--line); color: #9e8b50; font-size: 11px; line-height: 1.6; }
     .footer span:last-child { text-align: right; }
     @media (max-width: 700px) {
       .shell { width: min(100% - 28px, 560px); padding-top: 25px; }
@@ -98,7 +100,15 @@
 <body>
   <main class="shell">
     <header class="topline">
-      <div class="brand"><span class="brand-mark">✦</span><span>Project Showcase</span></div>
+      <div class="brand">
+        <span class="brand-mark">✦</span>
+        <span class="brand-copy">
+          <span>SRM Valliammai Engineering College</span>
+          <span>Department of English</span>
+          <span>Mystic Summit Hackathon</span>
+          <span>Website built and actively managed by Karnesh Raja, AI-DS I</span>
+        </span>
+      </div>
       <div class="live-pill"><span class="live-dot"></span> Live submissions</div>
     </header>
 
