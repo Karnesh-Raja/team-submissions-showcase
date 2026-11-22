@@ -282,9 +282,191 @@
       .team-card, .refresh-button, #search, .action-link { transition: none !important; }
     }
 
+
+    /* Mystic Summit ambient world — black and gold, CSS-only and mobile-friendly */
+    .ambient-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse at 48% 24%, rgba(112, 78, 17, .15), transparent 48%),
+        linear-gradient(145deg, rgba(8, 8, 8, .05), rgba(0, 0, 0, .48));
+      contain: strict;
+    }
+    .shell { position: relative; z-index: 1; }
+    .ambient-aurora {
+      position: absolute;
+      inset: -25%;
+      opacity: .45;
+      background:
+        radial-gradient(ellipse at 18% 30%, rgba(212,175,55,.17), transparent 28%),
+        radial-gradient(ellipse at 78% 42%, rgba(180,129,31,.13), transparent 31%),
+        radial-gradient(ellipse at 48% 84%, rgba(255,224,135,.09), transparent 35%);
+      filter: blur(46px);
+      animation: auroraShift 24s ease-in-out infinite alternate;
+      will-change: transform;
+    }
+    .ambient-orb {
+      position: absolute;
+      display: block;
+      border: 1px solid rgba(244,214,133,.22);
+      border-radius: 50%;
+      box-shadow: 0 0 30px rgba(212,175,55,.08), inset 0 0 32px rgba(212,175,55,.08);
+      will-change: transform;
+    }
+    .ambient-orb--gold {
+      width: clamp(130px, 22vw, 300px);
+      aspect-ratio: 1;
+      top: 13%; left: -7%;
+      background: radial-gradient(circle at 35% 32%, rgba(255,235,170,.13), rgba(212,175,55,.025) 56%, transparent 72%);
+      animation: orbDriftA 19s ease-in-out infinite alternate;
+    }
+    .ambient-orb--champagne {
+      width: clamp(95px, 16vw, 220px);
+      aspect-ratio: 1;
+      top: 46%; right: -6%;
+      border-color: rgba(255,225,155,.18);
+      background: radial-gradient(circle at 35% 30%, rgba(255,244,207,.12), rgba(194,148,43,.025) 62%, transparent 74%);
+      animation: orbDriftB 22s ease-in-out infinite alternate;
+    }
+    .ambient-orb--bronze {
+      width: clamp(110px, 19vw, 250px);
+      aspect-ratio: 1;
+      bottom: -7%; left: 36%;
+      border-color: rgba(171,120,31,.18);
+      background: radial-gradient(circle, rgba(169,116,25,.10), transparent 70%);
+      animation: orbDriftC 26s ease-in-out infinite alternate;
+    }
+    .ambient-stars {
+      position: absolute;
+      inset: 0;
+      opacity: .36;
+      background-image:
+        radial-gradient(1.4px 1.4px at 24px 38px, rgba(255,239,184,.95) 60%, transparent 100%),
+        radial-gradient(1px 1px at 91px 113px, rgba(224,190,100,.9) 60%, transparent 100%),
+        radial-gradient(1.6px 1.6px at 157px 61px, rgba(255,247,219,.8) 60%, transparent 100%),
+        radial-gradient(1px 1px at 211px 168px, rgba(212,175,55,.9) 60%, transparent 100%);
+      background-size: 260px 220px;
+      animation: starGlide 42s linear infinite;
+    }
+    .ambient-grid {
+      position: absolute;
+      inset: 0;
+      opacity: .10;
+      background-image: linear-gradient(rgba(212,175,55,.10) 1px, transparent 1px), linear-gradient(90deg, rgba(212,175,55,.10) 1px, transparent 1px);
+      background-size: 76px 76px;
+      mask-image: radial-gradient(ellipse at center, black, transparent 78%);
+      -webkit-mask-image: radial-gradient(ellipse at center, black, transparent 78%);
+    }
+    .hero { z-index: 1; }
+    .hero-mascot {
+      position: absolute;
+      z-index: 3;
+      width: clamp(78px, 12vw, 126px);
+      aspect-ratio: 1;
+      top: 4px;
+      right: 4%;
+      display: grid;
+      place-items: center;
+      pointer-events: none;
+      transform-origin: 50% 80%;
+      animation: mascotJourney 7.5s cubic-bezier(.45,0,.35,1) infinite;
+      filter: drop-shadow(0 13px 18px rgba(0,0,0,.46));
+      will-change: transform;
+    }
+    .mascot-creature {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+      filter: drop-shadow(0 0 12px rgba(231,190,73,.38)) drop-shadow(0 0 27px rgba(212,175,55,.16));
+      animation: mascotSquish 7.5s ease-in-out infinite;
+    }
+    .mascot-orbit {
+      position: absolute;
+      width: 112%;
+      height: 42%;
+      border: 1px solid rgba(243,211,119,.48);
+      border-radius: 50%;
+      transform: rotate(-24deg);
+      box-shadow: 0 0 12px rgba(212,175,55,.18);
+    }
+    .mascot-orbit--two {
+      width: 128%; height: 56%;
+      border-color: rgba(255,237,186,.24);
+      transform: rotate(58deg);
+      animation: orbitSpin 10s linear infinite;
+    }
+    .mascot-orbit--one { animation: orbitSpin 14s linear infinite reverse; }
+    .mascot-spark {
+      position: absolute;
+      z-index: 3;
+      color: #fff1b8;
+      text-shadow: 0 0 10px rgba(255,222,130,.9), 0 0 20px rgba(212,175,55,.65);
+      animation: sparklePop 2.6s ease-in-out infinite;
+    }
+    .mascot-spark--one { top: 8%; right: -1%; font-size: 19px; }
+    .mascot-spark--two { left: 0; bottom: 16%; font-size: 15px; animation-delay: -1.3s; }
+    .hero-title { transform-style: preserve-3d; }
+    .event-title span { filter: drop-shadow(0 0 13px rgba(232,190,75,.48)) drop-shadow(0 0 35px rgba(212,175,55,.25)); }
+    .team-card { transform-style: preserve-3d; }
+    .team-card summary { transition: background .25s ease, transform .25s ease; }
+    .team-card:hover summary { transform: translateZ(7px); }
+    @keyframes auroraShift {
+      from { transform: translate3d(-2%, -1%, 0) rotate(-3deg) scale(1); }
+      to { transform: translate3d(3%, 2%, 0) rotate(4deg) scale(1.08); }
+    }
+    @keyframes orbDriftA { to { transform: translate3d(48px, 36px, 0) scale(1.12); } }
+    @keyframes orbDriftB { to { transform: translate3d(-42px, -32px, 0) scale(.92); } }
+    @keyframes orbDriftC { to { transform: translate3d(24px, -42px, 0) scale(1.1); } }
+    @keyframes starGlide { to { background-position: 260px 220px; } }
+    @keyframes mascotJourney {
+      0%, 100% { transform: translate3d(0, 0, 0) rotate(-7deg) scale(1); }
+      13% { transform: translate3d(-10px, -23px, 0) rotate(8deg) scale(1.04); }
+      26% { transform: translate3d(-30px, 0, 0) rotate(-6deg) scale(.98); }
+      42% { transform: translate3d(-52px, -32px, 0) rotate(10deg) scale(1.06); }
+      57% { transform: translate3d(-72px, 0, 0) rotate(-8deg) scale(.98); }
+      73% { transform: translate3d(-34px, -17px, 0) rotate(6deg) scale(1.03); }
+      87% { transform: translate3d(-8px, 0, 0) rotate(-4deg) scale(1); }
+    }
+    @keyframes mascotSquish {
+      0%, 24%, 58%, 100% { transform: scale(1,1); }
+      13%, 42%, 73% { transform: scale(.96,1.05); }
+      28%, 62%, 78% { transform: scale(1.06,.93); }
+    }
+    @keyframes orbitSpin { to { transform: rotate(336deg); } }
+    @keyframes sparklePop { 0%,100% { opacity: .35; transform: scale(.7) rotate(0); } 50% { opacity: 1; transform: scale(1.25) rotate(18deg); } }
+    @media (max-width: 700px) {
+      .ambient-grid { opacity: .055; background-size: 54px 54px; }
+      .ambient-aurora { filter: blur(34px); opacity: .34; }
+      .hero-mascot { width: 76px; right: 0; top: 0; }
+      .mascot-orbit { opacity: .75; }
+    }
+    @media (max-width: 430px) {
+      .hero-mascot { width: 64px; top: 5px; right: -2px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .ambient-aurora, .ambient-orb, .ambient-stars, .hero-mascot, .mascot-creature,
+      .mascot-orbit, .mascot-spark { animation: none !important; }
+      .ambient-bg { opacity: .78; }
+      .team-card summary { transition: none !important; }
+    }
+
   </style>
 </head>
 <body>
+
+  <div class="ambient-bg" aria-hidden="true">
+    <div class="ambient-aurora"></div>
+    <span class="ambient-orb ambient-orb--gold"></span>
+    <span class="ambient-orb ambient-orb--champagne"></span>
+    <span class="ambient-orb ambient-orb--bronze"></span>
+    <div class="ambient-stars"></div>
+    <div class="ambient-grid"></div>
+  </div>
   <main class="shell">
     <header class="topline">
       <div class="brand">
@@ -300,6 +482,45 @@
 
     <section class="hero">
       <p class="eyebrow">Ideas made visible</p>
+
+      <div class="hero-mascot" aria-hidden="true">
+        <span class="mascot-orbit mascot-orbit--one"></span>
+        <span class="mascot-orbit mascot-orbit--two"></span>
+        <svg class="mascot-creature" viewBox="0 0 140 140" role="presentation" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="mascotGold" x1="18" y1="14" x2="118" y2="130" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#fff5c9"/>
+              <stop offset=".34" stop-color="#e9c75d"/>
+              <stop offset=".72" stop-color="#bd8a22"/>
+              <stop offset="1" stop-color="#815611"/>
+            </linearGradient>
+            <linearGradient id="mascotLight" x1="37" y1="27" x2="100" y2="93" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#fffbe8" stop-opacity=".9"/>
+              <stop offset="1" stop-color="#fffbe8" stop-opacity="0"/>
+            </linearGradient>
+            <filter id="mascotShadow" x="-40%" y="-40%" width="180%" height="190%">
+              <feGaussianBlur stdDeviation="5"/>
+            </filter>
+          </defs>
+          <ellipse cx="70" cy="119" rx="34" ry="8" fill="#d4af37" opacity=".28" filter="url(#mascotShadow)"/>
+          <path d="M69 28 C67 15 78 9 89 13" fill="none" stroke="#e7c45c" stroke-width="5" stroke-linecap="round"/>
+          <circle cx="91" cy="12" r="7" fill="#fff0ac" stroke="#b98720" stroke-width="2"/>
+          <path d="M28 76 C27 47 45 29 70 29 C95 29 114 47 113 76 C112 103 96 119 70 119 C44 119 28 103 28 76Z" fill="url(#mascotGold)" stroke="#ffe7a0" stroke-width="2.5"/>
+          <path d="M38 65 C43 44 57 37 74 38 C59 47 53 61 53 81 C53 95 58 105 68 115 C45 112 33 94 38 65Z" fill="url(#mascotLight)"/>
+          <path d="M43 69 C43 58 50 51 58 51 C66 51 71 58 71 69 C71 78 66 84 58 84 C50 84 43 78 43 69Z" fill="#171208"/>
+          <path d="M75 69 C75 58 82 51 90 51 C98 51 105 58 105 69 C105 78 98 84 90 84 C82 84 75 78 75 69Z" fill="#171208"/>
+          <circle cx="54" cy="62" r="3.5" fill="#fff7d7"/>
+          <circle cx="86" cy="62" r="3.5" fill="#fff7d7"/>
+          <path d="M62 94 Q70 101 78 94" fill="none" stroke="#6d470e" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="36" cy="88" r="5" fill="#fff0b5" opacity=".65"/>
+          <circle cx="104" cy="88" r="5" fill="#fff0b5" opacity=".65"/>
+          <path d="M52 116 L47 126 M88 116 L93 126" stroke="#c08d24" stroke-width="7" stroke-linecap="round"/>
+          <path d="M21 46 L24 38 L27 46 L35 49 L27 52 L24 60 L21 52 L13 49Z" fill="#fff0ad"/>
+          <path d="M115 35 L118 28 L121 35 L128 38 L121 41 L118 48 L115 41 L108 38Z" fill="#e6c15b"/>
+        </svg>
+        <span class="mascot-spark mascot-spark--one">✦</span>
+        <span class="mascot-spark mascot-spark--two">✧</span>
+      </div>
       <h1 class="event-title"><span>Mystic Summit</span><br />Hackathon</h1>
       <div class="event-rule" aria-hidden="true"></div>
       <p class="intro">Explore the teams that have submitted their work. Open a team to view its presentation or watch its project video.</p>
