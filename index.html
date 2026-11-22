@@ -399,51 +399,68 @@
     }
 
 
-    /* Small, non-interactive mascot companion — decorative and kept out of the way */
+    /* Interactive mascot: draggable, flickable and intentionally unobtrusive */
     .mascot-companion {
-      position: absolute;
-      top: 24vh;
-      right: max(14px, calc((100vw - 1120px) / 2 - 64px));
-      width: 48px;
-      height: 48px;
+      position: fixed;
+      right: 16px;
+      bottom: 22px;
+      z-index: 20;
+      width: 56px;
+      height: 58px;
       display: grid;
       place-items: center;
-      opacity: .76;
-      pointer-events: none;
+      padding: 0;
+      border: 0;
+      border-radius: 50%;
+      background: transparent;
+      color: inherit;
+      appearance: none;
+      cursor: grab;
+      touch-action: none;
       user-select: none;
-      filter: drop-shadow(0 0 12px rgba(212,175,55,.24));
-      animation: mascotWander 17s ease-in-out infinite;
-      will-change: transform;
+      -webkit-user-select: none;
+      pointer-events: auto;
+      filter: drop-shadow(0 0 12px rgba(212,175,55,.26));
+      will-change: left, top, transform;
+      outline: none;
+    }
+    .mascot-companion:hover { filter: drop-shadow(0 0 17px rgba(242,214,117,.48)); }
+    .mascot-companion:focus-visible { outline: 2px solid #f2d675; outline-offset: 5px; }
+    .mascot-companion.is-dragging { cursor: grabbing; filter: drop-shadow(0 0 20px rgba(255,224,135,.72)); }
+    .mascot-aura {
+      position: absolute;
+      inset: 7px;
+      border: 1px solid rgba(242,214,117,.32);
+      border-radius: 50%;
+      transform: rotateX(68deg) scale(1.55);
+      box-shadow: 0 0 13px rgba(212,175,55,.18);
+      pointer-events: none;
     }
     .mascot-creature {
       position: relative;
-      width: 38px;
-      height: 34px;
-      border: 1px solid rgba(255,238,185,.8);
+      width: 42px;
+      height: 38px;
+      border: 1px solid rgba(255,238,185,.88);
       border-radius: 48% 48% 43% 43%;
       background: radial-gradient(circle at 34% 23%, #fff4c5 0 5%, #e6c45e 23%, #a8791c 76%, #65450d 100%);
-      box-shadow: inset 0 3px 6px rgba(255,255,255,.38), inset 0 -5px 8px rgba(75,48,5,.35), 0 0 15px rgba(212,175,55,.28);
+      box-shadow: inset 0 3px 6px rgba(255,255,255,.38), inset 0 -5px 8px rgba(75,48,5,.35), 0 0 15px rgba(212,175,55,.30);
+      pointer-events: none;
+      transform-origin: 50% 85%;
     }
     .mascot-creature::before,
     .mascot-creature::after {
       content: "";
       position: absolute;
       top: -5px;
-      width: 8px;
-      height: 10px;
+      width: 9px;
+      height: 11px;
       border: 1px solid rgba(255,232,164,.75);
       background: linear-gradient(145deg, #e9cc79, #9a6b17);
       border-radius: 80% 80% 20% 20%;
     }
     .mascot-creature::before { left: 4px; transform: rotate(-22deg); }
     .mascot-creature::after { right: 4px; transform: rotate(22deg); }
-    .mascot-eyes {
-      position: absolute;
-      top: 13px;
-      left: 9px;
-      display: flex;
-      gap: 8px;
-    }
+    .mascot-eyes { position: absolute; top: 14px; left: 10px; display: flex; gap: 8px; }
     .mascot-eyes span {
       display: block;
       width: 6px;
@@ -451,47 +468,52 @@
       border-radius: 50%;
       background: #211806;
       box-shadow: 0 0 0 1px rgba(255,249,220,.34), inset 1px 1px 1px rgba(255,255,255,.65);
+      transform: translate(var(--look-x, 0px), var(--look-y, 0px));
     }
     .mascot-smile {
       position: absolute;
-      left: 15px;
-      top: 24px;
+      left: 16px;
+      top: 26px;
       width: 8px;
       height: 4px;
       border-bottom: 1.5px solid #49300a;
       border-radius: 0 0 9px 9px;
     }
-    .mascot-aura {
+    .mascot-stars {
       position: absolute;
-      inset: 3px;
-      border: 1px solid rgba(242,214,117,.28);
-      border-radius: 50%;
-      transform: rotateX(68deg) scale(1.5);
-      box-shadow: 0 0 11px rgba(212,175,55,.12);
+      left: 50%;
+      top: 0;
+      width: 74px;
+      color: #ffe9a0;
+      font-size: 14px;
+      letter-spacing: 7px;
+      text-shadow: 0 0 8px rgba(255,224,135,.95);
+      opacity: 0;
+      pointer-events: none;
+      transform: translate(-50%, 0) scale(.35);
     }
-    @keyframes mascotWander {
-      0%, 100% { transform: translate3d(0, 0, 0) rotate(-5deg); }
-      22% { transform: translate3d(-7px, 42px, 0) rotate(5deg); }
-      48% { transform: translate3d(0, 92px, 0) rotate(-3deg); }
-      72% { transform: translate3d(-10px, 48px, 0) rotate(6deg); }
+    .mascot-companion.is-bonked .mascot-creature { animation: mascotBonk .62s cubic-bezier(.2,.8,.25,1); }
+    .mascot-companion.is-bonked .mascot-stars { animation: mascotStars .72s ease-out; }
+    @keyframes mascotBonk {
+      0% { transform: scale(1,1) rotate(0); }
+      18% { transform: scale(1.18,.72) rotate(-13deg); }
+      40% { transform: scale(.82,1.16) rotate(12deg); }
+      62% { transform: scale(1.08,.9) rotate(-7deg); }
+      82% { transform: scale(.96,1.04) rotate(4deg); }
+      100% { transform: scale(1,1) rotate(0); }
+    }
+    @keyframes mascotStars {
+      0% { opacity: 0; transform: translate(-50%, 8px) scale(.25) rotate(-20deg); }
+      25% { opacity: 1; }
+      100% { opacity: 0; transform: translate(-50%, -30px) scale(1.12) rotate(18deg); }
     }
     @media (max-width: 700px) {
-      .mascot-companion {
-        top: auto;
-        right: 9px;
-        bottom: 14px;
-        width: 38px;
-        height: 38px;
-        opacity: .52;
-        transform: scale(.82);
-      }
-      @keyframes mascotWander {
-        0%, 100% { transform: translate3d(0, 0, 0) rotate(-4deg) scale(.82); }
-        50% { transform: translate3d(-3px, -13px, 0) rotate(4deg) scale(.82); }
-      }
+      .mascot-companion { right: 9px; bottom: 14px; width: 48px; height: 50px; opacity: .82; }
+      .mascot-creature { transform: scale(.88); }
     }
     @media (prefers-reduced-motion: reduce) {
-      .mascot-companion { animation: none !important; }
+      .mascot-companion.is-bonked .mascot-creature,
+      .mascot-companion.is-bonked .mascot-stars { animation: none !important; }
     }
 
   </style>
@@ -505,14 +527,17 @@
     <span class="ambient-orb ambient-orb--bronze"></span>
     <div class="ambient-stars"></div>
     <div class="ambient-grid"></div>
-    <div class="mascot-companion" aria-hidden="true">
-      <div class="mascot-aura"></div>
-      <div class="mascot-creature">
-        <div class="mascot-eyes"><span></span><span></span></div>
-        <div class="mascot-smile"></div>
-      </div>
-    </div>
   </div>
+  <button class="mascot-companion" id="mascotCompanion" type="button"
+    aria-label="Golden mascot. Drag or flick me, or click for a playful reaction."
+    title="Drag me, flick me, or click for a surprise">
+    <span class="mascot-aura" aria-hidden="true"></span>
+    <span class="mascot-creature" aria-hidden="true">
+      <span class="mascot-eyes"><span></span><span></span></span>
+      <span class="mascot-smile"></span>
+    </span>
+    <span class="mascot-stars" aria-hidden="true">✦ ✧ ✦</span>
+  </button>
   <main class="shell">
     <header class="topline">
       <div class="brand">
@@ -757,5 +782,186 @@
       if (document.visibilityState === "visible") loadTeams();
     }, REFRESH_EVERY_MS);
   </script>
+  <script>
+    // Mascot interaction: follow the pointer, drag, flick with momentum, and click for a comic reaction.
+    (() => {
+      const mascot = document.getElementById("mascotCompanion");
+      if (!mascot) return;
+
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+      const EDGE = 7;
+      let x = 0;
+      let y = 0;
+      let vx = 0;
+      let vy = 0;
+      let angle = 0;
+      let mode = "idle";
+      let pointerId = null;
+      let grabOffsetX = 0;
+      let grabOffsetY = 0;
+      let lastPoint = null;
+      let velocityX = 0;
+      let velocityY = 0;
+      let dragMoved = false;
+      let bonkTimer = null;
+      let idlePhase = Math.random() * Math.PI * 2;
+
+      const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
+      const limits = () => ({
+        maxX: Math.max(EDGE, window.innerWidth - mascot.offsetWidth - EDGE),
+        maxY: Math.max(EDGE, window.innerHeight - mascot.offsetHeight - EDGE)
+      });
+      const place = () => {
+        mascot.style.left = `${x}px`;
+        mascot.style.top = `${y}px`;
+        mascot.style.right = "auto";
+        mascot.style.bottom = "auto";
+        mascot.style.transform = `rotate(${angle}deg)`;
+      };
+      const clampToViewport = () => {
+        const { maxX, maxY } = limits();
+        x = clamp(x, EDGE, maxX);
+        y = clamp(y, EDGE, maxY);
+      };
+
+      // Start near the lower-right edge, away from the main heading and controls.
+      x = Math.max(EDGE, window.innerWidth - mascot.offsetWidth - 18);
+      y = Math.max(EDGE, window.innerHeight - mascot.offsetHeight - 92);
+      place();
+
+      mascot.addEventListener("pointerdown", event => {
+        if (event.button !== undefined && event.button !== 0) return;
+        pointerId = event.pointerId;
+        mode = "drag";
+        dragMoved = false;
+        vx = 0;
+        vy = 0;
+        const rect = mascot.getBoundingClientRect();
+        grabOffsetX = event.clientX - rect.left;
+        grabOffsetY = event.clientY - rect.top;
+        lastPoint = { x: event.clientX, y: event.clientY, time: performance.now() };
+        velocityX = 0;
+        velocityY = 0;
+        mascot.classList.add("is-dragging");
+        mascot.setPointerCapture(pointerId);
+        event.preventDefault();
+      });
+
+      mascot.addEventListener("pointermove", event => {
+        if (mode !== "drag" || event.pointerId !== pointerId) return;
+        const now = performance.now();
+        const nextX = event.clientX - grabOffsetX;
+        const nextY = event.clientY - grabOffsetY;
+        if (Math.hypot(nextX - x, nextY - y) > 3) dragMoved = true;
+        if (lastPoint) {
+          const elapsed = Math.max(1, now - lastPoint.time);
+          velocityX = (event.clientX - lastPoint.x) / elapsed;
+          velocityY = (event.clientY - lastPoint.y) / elapsed;
+        }
+        lastPoint = { x: event.clientX, y: event.clientY, time: now };
+        x = nextX;
+        y = nextY;
+        clampToViewport();
+        angle = clamp(velocityX * 1.5, -24, 24);
+        place();
+        event.preventDefault();
+      });
+
+      const finishDrag = event => {
+        if (mode !== "drag" || (event && event.pointerId !== pointerId)) return;
+        mascot.classList.remove("is-dragging");
+        pointerId = null;
+        if (dragMoved && !reducedMotion.matches) {
+          // Convert the release speed into a short, playful flick.
+          vx = clamp(velocityX * 16, -18, 18);
+          vy = clamp(velocityY * 16, -18, 18);
+          mode = Math.hypot(vx, vy) > 1 ? "throw" : "idle";
+        } else {
+          vx = 0;
+          vy = 0;
+          mode = "idle";
+        }
+        if (dragMoved) {
+          // Prevent the browser's synthetic click after a drag from triggering the click reaction.
+          setTimeout(() => { dragMoved = false; }, 0);
+        }
+        lastPoint = null;
+      };
+      mascot.addEventListener("pointerup", finishDrag);
+      mascot.addEventListener("pointercancel", finishDrag);
+      mascot.addEventListener("lostpointercapture", finishDrag);
+
+      mascot.addEventListener("click", event => {
+        if (dragMoved) {
+          dragMoved = false;
+          event.preventDefault();
+          return;
+        }
+        mascot.classList.remove("is-bonked");
+        // Restart the small squash-and-stretch animation on every click.
+        void mascot.offsetWidth;
+        mascot.classList.add("is-bonked");
+        clearTimeout(bonkTimer);
+        bonkTimer = setTimeout(() => mascot.classList.remove("is-bonked"), 760);
+      });
+
+      // Its eyes gently follow the pointer when it is not being dragged.
+      document.addEventListener("pointermove", event => {
+        if (mode === "drag") return;
+        const rect = mascot.getBoundingClientRect();
+        const dx = clamp((event.clientX - (rect.left + rect.width / 2)) / 42, -1, 1) * 1.7;
+        const dy = clamp((event.clientY - (rect.top + rect.height / 2)) / 42, -1, 1) * 1.5;
+        mascot.style.setProperty("--look-x", `${dx}px`);
+        mascot.style.setProperty("--look-y", `${dy}px`);
+      }, { passive: true });
+
+      window.addEventListener("resize", () => {
+        clampToViewport();
+        place();
+      });
+
+      let previousFrame = 0;
+      function animateMascot(timestamp) {
+        requestAnimationFrame(animateMascot);
+        if (document.hidden || mode === "drag") return;
+        const dt = previousFrame ? Math.min(2, (timestamp - previousFrame) / 16.67) : 1;
+        previousFrame = timestamp;
+
+        if (mode === "throw" && !reducedMotion.matches) {
+          // Light gravity, friction and soft edge bounces give a tossed-toy feeling.
+          x += vx * dt;
+          y += vy * dt;
+          vy += 0.13 * dt;
+          vx *= Math.pow(0.986, dt);
+          vy *= Math.pow(0.986, dt);
+          const { maxX, maxY } = limits();
+          if (x < EDGE) { x = EDGE; vx = Math.abs(vx) * 0.62; }
+          if (x > maxX) { x = maxX; vx = -Math.abs(vx) * 0.62; }
+          if (y < EDGE) { y = EDGE; vy = Math.abs(vy) * 0.62; }
+          if (y > maxY) { y = maxY; vy = -Math.abs(vy) * 0.48; vx *= 0.82; }
+          angle += vx * 0.35 * dt;
+          if (Math.hypot(vx, vy) < 0.42) {
+            mode = "idle";
+            vx = 0;
+            vy = 0;
+            idlePhase = timestamp * 0.001;
+          }
+        } else if (mode === "idle" && !reducedMotion.matches) {
+          // A small right-edge wandering lane keeps the mascot away from the page's main content.
+          const { maxX, maxY } = limits();
+          const anchorX = Math.max(EDGE, maxX - 2);
+          const anchorY = Math.max(EDGE, maxY - 82);
+          const t = timestamp * 0.00042 + idlePhase;
+          x += (anchorX + Math.sin(t * 0.72) * 7 - x) * 0.035 * dt;
+          y += (anchorY + Math.sin(t) * Math.min(22, window.innerHeight * 0.035) - y) * 0.035 * dt;
+          angle += (Math.sin(t * 1.1) * 5 - angle) * 0.025 * dt;
+        }
+        clampToViewport();
+        place();
+      }
+      requestAnimationFrame(animateMascot);
+    })();
+  </script>
+
 </body>
 </html>
