@@ -672,7 +672,7 @@
 
       for (let rowIndex = 0; rowIndex < scanLimit; rowIndex++) {
         const headers = rows[rowIndex].map(normaliseHeader);
-        const teamIndex = headers.findIndex(header =>
+        let teamIndex = headers.findIndex(header =>
           header.includes("team name") || header === "team" || (header.includes("team") && header.includes("name"))
         );
         const leaderIndex = headers.findIndex(header =>
@@ -682,6 +682,15 @@
           header.includes("ppt") || header.includes("presentation")
         );
         const videoIndex = headers.findIndex(header => header.includes("video"));
+
+        // Supports the published 3-column sheet exactly as shown in the user's screenshot:
+        // "Tam Name" | "PPT link (GitHub)" | "Video link (Google Drive)".
+        // Some sheets use a typo or custom label for the first header, so when PPT and
+        // Video columns are confidently identified, use the remaining first column as
+        // the combined Team Name - Team Leader Name field.
+        if (teamIndex === -1 && pptIndex !== -1 && videoIndex !== -1) {
+          teamIndex = headers.findIndex((_, index) => index !== pptIndex && index !== videoIndex);
+        }
 
         // Supports both formats:
         // 4 columns: Team Name | Team Leader Name | PPT link | Video link
