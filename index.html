@@ -683,14 +683,37 @@
         );
         const videoIndex = headers.findIndex(header => header.includes("video"));
 
-        if (teamIndex !== -1 && leaderIndex !== -1 && pptIndex !== -1 && videoIndex !== -1) {
+        // Supports both formats:
+        // 4 columns: Team Name | Team Leader Name | PPT link | Video link
+        // 3 columns: Team Name (with " - Team Leader Name" appended) | PPT link | Video link
+        if (teamIndex !== -1 && pptIndex !== -1 && videoIndex !== -1) {
           return { headerRowIndex: rowIndex, teamIndex, leaderIndex, pptIndex, videoIndex };
         }
       }
 
-      // Leader Name is required to match each live submission to the
-      // correct registration record, including repeated team names.
+      // A separate leader column is optional: the 3-column format stores
+      // the leader after the team name, separated by " - ".
       return null;
+    }
+
+    function splitTeamAndLeader(combinedValue) {
+      const combined = String(combinedValue || "").trim();
+      // Split at the final " - " so hyphens inside a team name are preserved.
+      const separators = [" - ", " – ", " — "];
+      let splitAt = -1;
+      let matchedSeparator = "";
+      for (const separator of separators) {
+        const index = combined.lastIndexOf(separator);
+        if (index > splitAt) {
+          splitAt = index;
+          matchedSeparator = separator;
+        }
+      }
+      if (splitAt < 0) return { teamName: combined, leaderName: "" };
+      return {
+        teamName: combined.slice(0, splitAt).trim(),
+        leaderName: combined.slice(splitAt + matchedSeparator.length).trim()
+      };
     }
 
     function safeLink(value) {
@@ -786,12 +809,18 @@
         }
 
         allTeams = rows.slice(columns.headerRowIndex + 1)
-          .map(row => ({
-            name: String(row[columns.teamIndex] || "").trim(),
-            leader: String(row[columns.leaderIndex] || "").trim(),
-            ppt: safeLink(row[columns.pptIndex]),
-            video: safeLink(row[columns.videoIndex])
-          }))
+          .map(row => {
+            const combined = splitTeamAndLeader(row[columns.teamIndex]);
+            const separateLeader = columns.leaderIndex >= 0
+              ? String(row[columns.leaderIndex] || "").trim()
+              : "";
+            return {
+              name: combined.teamName,
+              leader: separateLeader || combined.leaderName,
+              ppt: safeLink(row[columns.pptIndex]),
+              video: safeLink(row[columns.videoIndex])
+            };
+          })
           .filter(team => team.name)
           .reverse();
 
